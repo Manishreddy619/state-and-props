@@ -3,7 +3,7 @@
 // at that point we just need to FILL the state
 
 import { Component } from 'react';
-
+import { Container } from 'react-bootstrap';
 class DisplayComents extends Component {
 	// 'this' is always an object
 	// 'this' is filled with properties and methods belonging to the current INSTANCE of the class
@@ -17,28 +17,8 @@ class DisplayComents extends Component {
 		// initial value?
 		comments: [],
 	};
-
-	clickHandler = (e) => {
-		// does not create its own scope!
-		// so it inherits the outside one
-		// and this is why we get 'this' to be used
-		// console.log(this.setState)
-		console.log(e);
-		this.setState({
-			comments: [],
-		});
-	};
-
-	// 3)
-	componentDidMount = async () => {
-		console.log("I'm componentDidMount");
-		// here things happen AFTER the initial render
-		// this is the PERFECT PLACE for a get request
-		// because the user is already watching your "static" part of the jsx
-		// now we're going to perform here the fetch (a get request)
-		// it's somewhat like window.onload()
-
-		// componentDidMount will always happen JUST ONCE!!!
+	fetchData = async () => {
+		console.log(this.state.comments);
 		if (this.props.asin) {
 			try {
 				let response = await fetch(
@@ -69,14 +49,39 @@ class DisplayComents extends Component {
 		}
 	};
 
+	// 3)
+	componentDidMount = async () => {
+		console.log("I'm componentDidMount");
+		console.log(this.props.bookSelected);
+		// here things happen AFTER the initial render
+		// this is the PERFECT PLACE for a get request
+		// because the user is already watching your "static" part of the jsx
+		// now we're going to perform here the fetch (a get request)
+		// it's somewhat like window.onload()
+
+		// componentDidMount will always happen JUST ONCE!!!
+		this.fetchData();
+	};
+	componentDidUpdate = async (previousProps, previousState) => {
+		if (this.props.asin !== previousProps.asin) {
+			this.fetchData();
+		}
+	};
+
 	render() {
 		// the render method fires AGAIN every time there's a change in the STATE
 		// or in the PROPS of the component
 		console.log(this.props.asin);
+		console.log(this.state.comments);
+
 		// ? : this is the ternary operator
 		// && this is the short-circuit operator
 		return this.state.comments.map((el) => {
-			console.log(el.comments);
+			return (
+				<p key={el._id}>
+					{el.comment} {el.rate}
+				</p>
+			);
 		});
 	}
 }

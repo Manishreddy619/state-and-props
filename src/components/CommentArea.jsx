@@ -65,28 +65,33 @@ class CommentArea extends Component {
 
 	render() {
 		return (
-			<div>
-				<Form onSubmit={this.handleSubmit}>
-					<Form.Group>
-						<Form.Label>comment?</Form.Label>
-						<Form.Control
-							type='text'
-							placeholder='comment'
-							value={this.state.comment}
-							onChange={(e) => this.handleInput(e, 'comment')}
-						/>
-					</Form.Group>
-					<Form.Group>
-						<Form.Label>rating?</Form.Label>
-						<Form.Control
-							type='text'
-							placeholder='rating'
-							value={this.state.rate}
-							onChange={(e) => this.handleInput(e, 'rate')}
-						/>
-					</Form.Group>
-				</Form>
-			</div>
+			this.props.selected && (
+				<div>
+					<Form onSubmit={this.handleSubmit}>
+						<Form.Group>
+							<Form.Label>comment?</Form.Label>
+							<Form.Control
+								type='text'
+								placeholder='comment'
+								value={this.state.comment}
+								onChange={(e) => this.handleInput(e, 'comment')}
+							/>
+						</Form.Group>
+						<Form.Group>
+							<Form.Label>rating?</Form.Label>
+							<Form.Control
+								type='text'
+								placeholder='rating'
+								value={this.state.rate}
+								onChange={(e) => this.handleInput(e, 'rate')}
+							/>
+						</Form.Group>
+						<Button variant='primary' type='submit'>
+							Add Comment
+						</Button>
+					</Form>
+				</div>
+			)
 		);
 	}
 }

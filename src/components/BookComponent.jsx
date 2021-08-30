@@ -36,8 +36,8 @@ class BookComponent extends Component {
 								return (
 									<Col
 										sm={6}
-										lg={3}
-										md={4}
+										lg={4}
+										md={5}
 										className='mt-3'
 										id='main'
 										style={{ marginBottom: '3rem' }}
