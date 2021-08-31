@@ -5,19 +5,20 @@ import { Component } from 'react';
 import CommentArea from './CommentArea';
 
 import DisplayComents from './DisplayComents';
+import { useState } from 'react';
 
-class SingleBook extends Component {
-	state = {
-		selected: false,
-	};
+const SingleBook = ({ item }) => {
+	// state = {
+	// 	selected: false,
+	// };
+	const [selected, setselected] = useState(false);
 
-	render() {
-		// console.log(this.props.item);
-		return (
-			<Container>
-				<Row className='mb-4'>
-					<Col id='main' key={this.props.item.asin}>
-						{/* <Card
+	// console.log(this.props.item);
+	return (
+		<Container>
+			<Row className='mb-4'>
+				<Col id='main' key={item.asin}>
+					{/* <Card
 							onClick={() => this.setState({ selected: true })}
 							style={{
 								backgroundColor: this.state.selected ? 'orange' : '',
@@ -39,39 +40,25 @@ class SingleBook extends Component {
 						) : (
 							''
 						)} */}
-						{this.state.selected ? (
-							<CommentArea
-								asin={this.props.item.asin}
-								selected={this.state.selected}
-							/>
-						) : (
-							''
-						)}
-						<div
-							className='card text-truncate'
-							onClick={() => this.setState({ selected: !this.state.selected })}
-							style={{
-								backgroundColor: this.state.selected ? 'gray' : '',
-								zIndex: this.state.selected ? '999' : '',
-							}}>
-							<img className='image cover mt-3' src={this.props.item.img} />
-							<div className='book-info'>
-								<div className='title'>Title: {this.props.item.title}</div>
-								<div className='byline'>
-									Category: {this.props.item.category}
-								</div>
-							</div>
-							{this.state.selected ? (
-								<DisplayComents asin={this.props.item.asin} />
-							) : (
-								''
-							)}
+					{selected ? <CommentArea asin={item.asin} selected={selected} /> : ''}
+					<div
+						className='card text-truncate'
+						onClick={() => setselected(!selected)}
+						style={{
+							backgroundColor: selected ? 'gray' : '',
+							zIndex: selected ? '999' : '',
+						}}>
+						<img className='image cover mt-3' src={item.img} />
+						<div className='book-info'>
+							<div className='title'>Title: {item.title}</div>
+							<div className='byline'>Category: {item.category}</div>
 						</div>
-					</Col>
-				</Row>
-			</Container>
-		);
-	}
-}
+						{selected ? <DisplayComents asin={item.asin} /> : ''}
+					</div>
+				</Col>
+			</Row>
+		</Container>
+	);
+};
 
 export default SingleBook;

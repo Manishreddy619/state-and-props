@@ -2,9 +2,10 @@
 // the plan is to bind our JSX with the state (map over it)
 // at that point we just need to FILL the state
 
-import { Component } from 'react';
+import { useEffect } from 'react';
+import { Component, useState } from 'react';
 import { Container } from 'react-bootstrap';
-class DisplayComents extends Component {
+const DisplayComents = ({ asin }) => {
 	// 'this' is always an object
 	// 'this' is filled with properties and methods belonging to the current INSTANCE of the class
 
@@ -13,17 +14,17 @@ class DisplayComents extends Component {
 	// 3) we have now to FILL that state with our reservations
 
 	// 1)
-	state = {
-		// initial value?
-		comments: [],
-	};
-	fetchData = async () => {
-		console.log(this.state.comments);
-		if (this.props.asin) {
+	// state = {
+	// 	// initial value?
+	// 	comments: [],
+	// };
+	const [comments, setcomments] = useState([]);
+	const fetchData = async () => {
+		console.log(comments);
+		if (asin) {
 			try {
 				let response = await fetch(
-					'https://striveschool-api.herokuapp.com/api/comments/' +
-						this.props.asin,
+					'https://striveschool-api.herokuapp.com/api/comments/' + asin,
 					{
 						headers: {
 							Authorization:
@@ -37,9 +38,7 @@ class DisplayComents extends Component {
 					let comments = await response.json();
 					console.log(comments);
 					// console.log(reservations)
-					this.setState({
-						comments: comments,
-					});
+					setcomments(comments);
 				} else {
 					console.log('something went wrong with the server');
 				}
@@ -50,40 +49,44 @@ class DisplayComents extends Component {
 	};
 
 	// 3)
-	componentDidMount = async () => {
-		console.log("I'm componentDidMount");
-		console.log(this.props.bookSelected);
-		// here things happen AFTER the initial render
-		// this is the PERFECT PLACE for a get request
-		// because the user is already watching your "static" part of the jsx
-		// now we're going to perform here the fetch (a get request)
-		// it's somewhat like window.onload()
+	useEffect(() => {
+		fetchData();
+	}, []);
+	// componentDidMount = async () => {
+	// 	console.log("I'm componentDidMount");
+	// 	console.log(this.props.bookSelected);
+	// 	// here things happen AFTER the initial render
+	// 	// this is the PERFECT PLACE for a get request
+	// 	// because the user is already watching your "static" part of the jsx
+	// 	// now we're going to perform here the fetch (a get request)
+	// 	// it's somewhat like window.onload()
 
-		// componentDidMount will always happen JUST ONCE!!!
-		this.fetchData();
-	};
-	componentDidUpdate = async (previousProps, previousState) => {
-		if (this.props.asin !== previousProps.asin) {
-			this.fetchData();
-		}
-	};
+	// 	// componentDidMount will always happen JUST ONCE!!!
+	// 	this.fetchData();
+	// };
+	// componentDidUpdate = async (previousProps, previousState) => {
+	// 	if (this.props.asin !== previousProps.asin) {
+	// 		this.fetchData();
+	// 	}
+	// };
+	useEffect(() => {
+		fetchData();
+	}, [asin]);
 
-	render() {
-		// the render method fires AGAIN every time there's a change in the STATE
-		// or in the PROPS of the component
-		console.log(this.props.asin);
-		console.log(this.state.comments);
+	// the render method fires AGAIN every time there's a change in the STATE
+	// or in the PROPS of the component
+	console.log(asin);
+	console.log(comments);
 
-		// ? : this is the ternary operator
-		// && this is the short-circuit operator
-		return this.state.comments.map((el) => {
-			return (
-				<p key={el._id}>
-					{el.comment} {el.rate}
-				</p>
-			);
-		});
-	}
-}
+	// ? : this is the ternary operator
+	// && this is the short-circuit operator
+	return comments.map((el) => {
+		return (
+			<p key={el._id}>
+				{el.comment} {el.rate}
+			</p>
+		);
+	});
+};
 
 export default DisplayComents;

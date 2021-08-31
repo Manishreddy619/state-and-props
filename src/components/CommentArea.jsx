@@ -1,33 +1,39 @@
 import React from 'react';
-import { Component } from 'react';
+import { useState } from 'react';
+
 import { Button, Form } from 'react-bootstrap';
 
-class CommentArea extends Component {
-	state = {
+const CommentArea = ({ asin, selected }) => {
+	// state = {
+	// 	comment: '',
+	// 	rate: '',
+	// 	elementId: '',
+	// };
+	const [comments, setcomments] = useState({
 		comment: '',
 		rate: '',
 		elementId: '',
-	};
+	});
 
-	handleInput = (e, propertyName) => {
+	const handleInput = (e, propertyName) => {
 		// this function needs two things: the event coming from the input and
 		// which property of this.state.reservation we should update
 
 		// if we're coming from the smoking checkbox, we should not use
 		// e.target.value, but instead e.target.checked (it will be true/false)
 
-		this.setState({
-			...this.state,
-			elementId: this.props.asin,
+		setcomments({
+			...comments,
+			elementId: asin,
 			// copying over name, phone, numberOfPeople, smoking etc.
 			[propertyName]: e.target.value, // for every field but the smoking
 		});
 	};
 
-	handleSubmit = async (e) => {
+	const handleSubmit = async (e) => {
 		// with async/await
 		e.preventDefault();
-		console.log(this.state);
+		console.log(comments);
 
 		try {
 			// the place for every operation that might fail outside of your control
@@ -36,7 +42,7 @@ class CommentArea extends Component {
 				'https://striveschool-api.herokuapp.com/api/comments',
 				{
 					method: 'POST',
-					body: JSON.stringify(this.state),
+					body: JSON.stringify(comments),
 					headers: {
 						'Content-type': 'application/json',
 						Authorization:
@@ -50,7 +56,7 @@ class CommentArea extends Component {
 				alert('your comment has been  saved correctly!');
 
 				// this is for resetting the form to its initial state
-				this.setState({
+				setcomments({
 					comment: '',
 					rate: '',
 					elementId: '',
@@ -63,37 +69,35 @@ class CommentArea extends Component {
 		}
 	};
 
-	render() {
-		return (
-			this.props.selected && (
-				<div>
-					<Form onSubmit={this.handleSubmit}>
-						<Form.Group>
-							<Form.Label>comment?</Form.Label>
-							<Form.Control
-								type='text'
-								placeholder='comment'
-								value={this.state.comment}
-								onChange={(e) => this.handleInput(e, 'comment')}
-							/>
-						</Form.Group>
-						<Form.Group>
-							<Form.Label>rating?</Form.Label>
-							<Form.Control
-								type='text'
-								placeholder='rating'
-								value={this.state.rate}
-								onChange={(e) => this.handleInput(e, 'rate')}
-							/>
-						</Form.Group>
-						<Button variant='primary' type='submit'>
-							Add Comment
-						</Button>
-					</Form>
-				</div>
-			)
-		);
-	}
-}
+	return (
+		selected && (
+			<div>
+				<Form onSubmit={handleSubmit}>
+					<Form.Group>
+						<Form.Label>comment?</Form.Label>
+						<Form.Control
+							type='text'
+							placeholder='comment'
+							value={comments.comment}
+							onChange={(e) => handleInput(e, 'comment')}
+						/>
+					</Form.Group>
+					<Form.Group>
+						<Form.Label>rating?</Form.Label>
+						<Form.Control
+							type='text'
+							placeholder='rating'
+							value={comments.rate}
+							onChange={(e) => handleInput(e, 'rate')}
+						/>
+					</Form.Group>
+					<Button variant='primary' type='submit'>
+						Add Comment
+					</Button>
+				</Form>
+			</div>
+		)
+	);
+};
 
 export default CommentArea;

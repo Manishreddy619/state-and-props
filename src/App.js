@@ -12,8 +12,8 @@ function App() {
 		<div className='App'>
 			{/* <WarningSign text='Danger here' /> */}
 
-			<MyBadge color='primary' text='Give me Some sunshine' />
-			<SingleBook item={Book[0]} />
+			{/* <MyBadge color='primary' text='Give me Some sunshine' /> */}
+			{/* <SingleBook item={Book[0]} /> */}
 			<BookComponent item={Book} />
 		</div>
 	);
